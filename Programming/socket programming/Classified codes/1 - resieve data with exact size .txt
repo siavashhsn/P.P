@@ -1,0 +1,70 @@
+//to do this action you should send size of data first
+//then send data.
+
+//send data =>
+
+byte[] data = Encoding.Default.GetBytes(data);
+
+socket.Send(BitConverter.GetBytes(data.Length), 0, 4, 0);
+// first send the length of text
+
+socket.Send(data, 0, data.Length, 0);
+//second send text
+
+
+//resieve data =>
+
+new Thread(() =>
+            //threading method is using for runing this bunch of codes beside others 
+            {
+                while (true)
+                {
+                    byte[] sizeofbuf = new byte[4];
+                    // initial value to get size of text that will be get
+
+                    sok.Receive(sizeofbuf, 0, sizeofbuf.Length, 0);
+                    // first of all recieve size of the text from server
+
+                    int size = BitConverter.ToInt32(sizeofbuf, 0);
+                    // convert size to int32
+
+                    MemoryStream ms = new MemoryStream();
+                    // memorystream to save text that will be recieved
+
+                    while (size > 0)
+                    //this while is for 
+                    {
+                        byte[] buffer;
+                        if (size < sok.ReceiveBufferSize)
+                            buffer = new byte[size];
+                        else
+                            buffer = new byte[sok.ReceiveBufferSize];
+                        // new size of byte array 
+
+                        int rec = sok.Receive(buffer, 0, buffer.Length, 0);
+                        // ???
+
+                        size -= rec;
+                        // ???
+
+                        ms.Write(buffer, 0, buffer.Length);
+                        // add to memorystream 
+                    }
+
+                    ms.Close();
+
+                    byte[] data = ms.ToArray();
+
+                    ms.Dispose();
+
+                    Dispatcher.BeginInvoke(new Action(delegate
+                        {
+							textbox.text = encoding.default.getstring(data);
+							
+                            //paragraph conv = new paragraph();						||
+                            //conv.inlines.add(encoding.default.getstring(data));	|| => to show data in richtextbox in wpf.
+                            //conversation.document.blocks.add(conv);				||
+                        }));
+                    // I don't exactly get this part (what is the Invoke doing)
+                }
+            }).Start();

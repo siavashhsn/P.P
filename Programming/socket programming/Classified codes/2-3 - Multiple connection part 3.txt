@@ -1,0 +1,19 @@
+// Multiple connection client side
+
+==============>>>>>>>>>>>>>
+
+namespace Multi_con_client
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Socket sok = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sok.Connect("127.0.0.1", 8);
+            sok.Close();
+            sok.Dispose();
+        }
+    }
+}
+
+//End of Multiple connection 

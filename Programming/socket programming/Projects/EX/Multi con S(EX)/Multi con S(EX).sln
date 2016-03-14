@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multi con S(EX)", "Multi con S(EX)\Multi con S(EX).csproj", "{B46EE46D-0079-49E7-8CBC-DBBBE0752EEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multi con C(EX)", "Multi con C(EX)\Multi con C(EX).csproj", "{3190CC42-C8E0-44D2-9FDC-E2AD8680224C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B46EE46D-0079-49E7-8CBC-DBBBE0752EEC}.Debug|x86.ActiveCfg = Debug|x86
+		{B46EE46D-0079-49E7-8CBC-DBBBE0752EEC}.Debug|x86.Build.0 = Debug|x86
+		{B46EE46D-0079-49E7-8CBC-DBBBE0752EEC}.Release|x86.ActiveCfg = Release|x86
+		{B46EE46D-0079-49E7-8CBC-DBBBE0752EEC}.Release|x86.Build.0 = Release|x86
+		{3190CC42-C8E0-44D2-9FDC-E2AD8680224C}.Debug|x86.ActiveCfg = Debug|x86
+		{3190CC42-C8E0-44D2-9FDC-E2AD8680224C}.Debug|x86.Build.0 = Debug|x86
+		{3190CC42-C8E0-44D2-9FDC-E2AD8680224C}.Release|x86.ActiveCfg = Release|x86
+		{3190CC42-C8E0-44D2-9FDC-E2AD8680224C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

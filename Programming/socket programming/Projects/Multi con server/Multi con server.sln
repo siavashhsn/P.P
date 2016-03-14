@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multi con server", "Multi con server\Multi con server.csproj", "{00B9ADA7-7177-4396-94FC-26B553314902}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multi con client", "Multi con client\Multi con client.csproj", "{96F1C8A5-1847-4747-94CB-7CA0D4309623}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00B9ADA7-7177-4396-94FC-26B553314902}.Debug|x86.ActiveCfg = Debug|x86
+		{00B9ADA7-7177-4396-94FC-26B553314902}.Debug|x86.Build.0 = Debug|x86
+		{00B9ADA7-7177-4396-94FC-26B553314902}.Release|x86.ActiveCfg = Release|x86
+		{00B9ADA7-7177-4396-94FC-26B553314902}.Release|x86.Build.0 = Release|x86
+		{96F1C8A5-1847-4747-94CB-7CA0D4309623}.Debug|x86.ActiveCfg = Debug|x86
+		{96F1C8A5-1847-4747-94CB-7CA0D4309623}.Debug|x86.Build.0 = Debug|x86
+		{96F1C8A5-1847-4747-94CB-7CA0D4309623}.Release|x86.ActiveCfg = Release|x86
+		{96F1C8A5-1847-4747-94CB-7CA0D4309623}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,3 @@
+*.suo
+test/bin
+test/obj
