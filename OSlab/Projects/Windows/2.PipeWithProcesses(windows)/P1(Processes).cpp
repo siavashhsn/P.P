@@ -32,10 +32,7 @@ int main()
 			WriteFile(hp,
 				a,
 				strlen(a),   // = length of string + terminating '\0' !!!
-				&
-				
-				
-				,
+				&Dwrite,
 				NULL);
 		}
 
