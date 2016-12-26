@@ -20,7 +20,6 @@ SOCKET hSocket;
 void _send(void*){
 	while (1){
 		memset(sendbuff, 0, MAX_BUFF);
-		cin.ignore();
 		if (cin.getline(sendbuff, MAX_BUFF)){
 			if (send(hSocket, sendbuff, MAX_BUFF, 0) == SOCKET_ERROR)
 				cout << "Server probably down. " << endl;
