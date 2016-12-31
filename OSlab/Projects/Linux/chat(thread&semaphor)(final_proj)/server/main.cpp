@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <semaphore.h>
 #include <pthread.h>
+#include <termios.h>
 #include <string.h>
 #include <stdlib.h>
 #include <resolv.h>
@@ -17,7 +18,6 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string>
-#include <math.h>
 
 using namespace std;
 
@@ -40,6 +40,11 @@ void* recv(void*);
 
 int main()
 {
+    struct termios t;
+    tcgetattr(STDIN_FILENO, &t);
+    t.c_lflag &= ~ICANON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+
     sem_init(&sem, 0, 1);
     int hsock;
 
@@ -88,39 +93,62 @@ int main()
     return 0;
 }
 
+bool f = false;
+
 void* recv(void*){
     while(1){
         memset(recvbuff, '\0', DEFAULT_BUFSIZE);
         recv(ssock, recvbuff, DEFAULT_BUFSIZE, 0);
         if(recvbuff[0] != '\0'){
+            if(sendbuff[0] != '\0')
+                sem_wait(&sem);
+            f = true;
             if(recvbuff[0] == ':')
             {
+                cout << "\r";
                 memset(recvbuff, '\0', DEFAULT_BUFSIZE);
                 recv(ssock, recvbuff, DEFAULT_BUFSIZE, 0);
                 cout << "reciving " << recvbuff  << " ...... " << endl;
                 int aa = recv_file();
+                if(sendbuff[0] != '\0')
+                    cout << sendbuff;
                 if(aa != -1)
                     continue;
             }
-            printf("Received text : %s \n", recvbuff);
+            cout << "\rReceived text : " << recvbuff;
+            if(sendbuff[0] != '\0'){
+                cout << sendbuff;
+                sem_post(&sem);
+            }
+            f = false;
         }
     }
 }
 
+
 void* send(void*){
+    char input[1];
+    memset(sendbuff, '\0',DEFAULT_BUFSIZE);
+    memset(input, '\0', 1);
     while(1){
-        memset(sendbuff, '\0',DEFAULT_BUFSIZE);
-        if(cin.getline(sendbuff, DEFAULT_BUFSIZE)){
-            if(sendbuff[0] == ':')
-            {
-                int a = send_file(sendbuff);
-                if(a != -1)
-                    continue;
+        do{
+            if(f == false){
+                input[0] = getchar();
+                strcat(sendbuff, input);
             }
-            if(send(ssock, sendbuff, DEFAULT_BUFSIZE,0) == -1){
-                fprintf(stderr, "Error sending data %d\n", errno);
-            }
+        }while(input[0] != '\n');
+
+        if(sendbuff[0] == ':')
+        {
+            int a = send_file(sendbuff);
+            if(a != -1)
+                continue;
         }
+        if(send(ssock, sendbuff, DEFAULT_BUFSIZE,0) == -1){
+            fprintf(stderr, "Error sending data %d\n", errno);
+        }
+        memset(sendbuff, '\0',DEFAULT_BUFSIZE);
+        memset(input, '\0', 1);
     }
 }
 

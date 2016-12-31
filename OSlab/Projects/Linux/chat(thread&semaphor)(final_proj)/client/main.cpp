@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <termios.h>
 #include <string.h>
 #include <stdlib.h>
 #include <resolv.h>
@@ -13,6 +14,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <fcntl.h>
+#include <cstdio>
 
 using namespace std;
 
@@ -22,8 +24,8 @@ sem_t sem;
 #define DEFAULT_HOST      	"127.0.0.1"
 #define DEFAULT_BUFSIZE		1024
 
-char sendbuff[DEFAULT_BUFSIZE];
-char recvbuff[DEFAULT_BUFSIZE];
+static char sendbuff[DEFAULT_BUFSIZE];
+static char recvbuff[DEFAULT_BUFSIZE];
 char a[DEFAULT_BUFSIZE];
 
 int csock;
@@ -37,6 +39,10 @@ void* recv(void*);
 
 int main()
 {
+    struct termios t;
+       tcgetattr(STDIN_FILENO, &t);
+       t.c_lflag &= ~ICANON;
+       tcsetattr(STDIN_FILENO, TCSANOW, &t);
     sem_init(&sem, 0, 1);
 
     struct sockaddr_in my_addr;
@@ -61,7 +67,7 @@ int main()
     else
     {
         strcpy(sendbuff, "initial connection is set...");
-        send(csock, sendbuff, DEFAULT_BUFSIZE,0);
+        send(csock, sendbuff, DEFAULT_BUFSIZE, 0);
     }
 
     memset(sendbuff, 0, DEFAULT_BUFSIZE);
@@ -78,39 +84,59 @@ int main()
     return 0;
 }
 
+bool f = false;
+
 void* recv(void*){
     while(1){
         memset(recvbuff, '\0', DEFAULT_BUFSIZE);
         recv(csock, recvbuff, DEFAULT_BUFSIZE, 0);
         if(recvbuff[0] != '\0'){
+            if(sendbuff[0] != '\0')
+                sem_wait(&sem);
+            f =  true;
             if(recvbuff[0] == ':')
             {
+                cout << "\r";
                 memset(recvbuff, '\0', DEFAULT_BUFSIZE);
                 recv(csock, recvbuff, DEFAULT_BUFSIZE, 0);
                 cout << "reciving " << recvbuff  << " ...... " << endl;
                 int aa = recv_file();
+                if(sendbuff[0] != '\0')
+                    cout << sendbuff;
                 if(aa != -1)
                     continue;
             }
-            printf("Received text : %s \n", recvbuff);
+            cout << "\r" << "Received text : " << recvbuff;
+            if(sendbuff[0] != '\0'){
+                cout << sendbuff;
+                sem_post(&sem);
+            }
+            f = false;
         }
     }
 }
 
 
 void* send(void*){
+    char input[0];
     while(1){
         memset(sendbuff, '\0',DEFAULT_BUFSIZE);
-        if(cin.getline(sendbuff, DEFAULT_BUFSIZE)){
-            if(sendbuff[0] == ':')
-            {
-                int a = send_file(sendbuff);
-                if(a != -1)
-                    continue;
+        memset(input, '\0', 1);
+
+        do{
+            if(f == false){
+                input[0] = getchar();
+                strcat(sendbuff, input);
             }
-            if(send(csock, sendbuff, DEFAULT_BUFSIZE,0) == -1){
-                fprintf(stderr, "Error sending data %d\n", errno);
-            }
+        }while(input[0] != '\n');
+        if(sendbuff[0] == ':')
+        {
+            int a = send_file(sendbuff);
+            if(a != -1)
+                continue;
+        }
+        if(send(csock, sendbuff, DEFAULT_BUFSIZE,0) == -1){
+            fprintf(stderr, "Error sending data %d\n", errno);
         }
     }
 }
