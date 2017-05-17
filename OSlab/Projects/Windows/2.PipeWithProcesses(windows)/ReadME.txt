@@ -1,1 +1,1 @@
-warning : *******first run p2 second run p1******
+warning : *******first run p2 than run p1******

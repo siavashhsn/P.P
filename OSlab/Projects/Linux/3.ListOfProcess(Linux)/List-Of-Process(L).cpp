@@ -17,7 +17,7 @@ void get_files()
     string pname;
     struct dirent *ent;
 	//open the /proc directory
-    if ((dir = opendir ("/proc")) != NULL) {
+    if ((dir = opendir ("/proc")) != NULL) { // posheye /proc ro baz mikonim 
 		//read all files in /proc directory
         while ((ent = readdir (dir)) != NULL) {
             cout << ent->d_name << endl;
@@ -26,15 +26,9 @@ void get_files()
             struct dirent *ent2;
             const char * nn = ent->d_name;
             char ss[256] = {};
-            //char sss[256] = {};
-            // ss[0]='/';ss[1]='p';ss[2]='r';ss[3]='o';ss[4]='c';ss[5]='/';
-            // sss[0]='/';sss[1]='p';sss[2]='r';sss[3]='o';sss[4]='c';sss[5]='/';
-
-
             strcpy(ss,"/proc/");
             strcat(ss,ent->d_name);
-            // strcpy(sss,ss);
-
+           
             int i = 6;
             int j;
             if((nn[0]>='0' && nn[0]<='9')){
