@@ -11,7 +11,7 @@ import commands
 a = "1"
 b = "2"
 
-tfidf_path = "/media/siavash/000AF8440AF837EC/cources/Information_Retrival/Proj/Projects/final_proj/code/1.0tfidf.txt"
+tfidf_path = "/media/siavash/000AF8440AF837EC/Sundries/Myfiles/Programming/Siavash-Programming matter/P.P/Information Retrival/final_proj DISCO/code/1.0tfidf.txt"
 l = []
 ll = []
 aaa = 0
@@ -86,8 +86,10 @@ if len(c) == 2:
 	else:
 		r = 0
 
+
 print("tfidf cosine similarity is : " + str(r))
 
+print wordlist
 
 avg = 0
 count = 0

@@ -137,10 +137,10 @@ for f in files:
                             we = t.replace(' ', '')
                             t = we
                     ll = [w for w in TXT if w not in stop]
-                    porter = PorterStemmer()
-                    # if len(ll):
-                        # print(ll)
-                    jj = [porter.stem(p) for p in ll]   
+                    # porter = PorterStemmer()
+                    # # if len(ll):
+                    #     # print(ll)
+                    # jj = [porter.stem(p) for p in ll]   
                     
                 if "ID:" in j:
                     ID = list(j.split(' '))
