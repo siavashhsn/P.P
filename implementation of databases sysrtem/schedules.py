@@ -1,13 +1,16 @@
 from collections import defaultdict
 
+#################################### graph class to hold graphs and check if it has cycle or not
 
 class Graph():
 	def __init__(self,node):
 		self.graph = defaultdict(list)
 		self.V = node
 
+
 	def addEdge(self,u,v):
 		self.graph[u].append(v)
+
 
 	def isCyclicUtil(self, v, visited, recStack):
 
@@ -41,30 +44,101 @@ class Graph():
 					return True
 		return False
 
-
 allTrn   = []
 tr_count = {}
 counter = 0
 
-n = raw_input()
-for i in range(int(n)):
-	a = raw_input()
-	allTrn.append(a)
-	if a[1:3] not in tr_count:
-		tr_count[a[1:3]] = counter
-		counter += 1
 
-g = Graph(len(tr_count))
+#################################### sersializable function
 
-for i in range(1, len(allTrn)):
-	if "W" or "R" in allTrn[i] and allTrn[i-1]:
-		if len(allTrn[i])==5 and len(allTrn[i-1])==5: 
-			if (allTrn[i][1:3] != allTrn[i-1][1:3]) and (allTrn[i][4] == allTrn[i-1][4]):
-				if "W" in allTrn[i][3] or allTrn[i-1][3]:
-					g.addEdge(tr_count[allTrn[i-1][1:3]], tr_count[allTrn[i][1:3]])
+def serializable():
+	g = Graph(len(tr_count))
+	for i in range(len(allTrn)-1):
+		if [x for x in ['W', 'R'] if x in allTrn[i]]:
+			for j in range(i+1, len(allTrn)):
+				if [x for x in ['W', 'R'] if x in allTrn[j]]:
+					if allTrn[i][1:3] != allTrn[j][1:3]:
+						if ("W" in allTrn[i]) or ("W" in allTrn[j]):
+							if (allTrn[i][4] == allTrn[j][4]):
+								g.addEdge(tr_count[allTrn[i][1:3]], tr_count[allTrn[j][1:3]])
 
-if g.isCyclic() == 1:
-	print "NO"
-else:
-	print "YES"
+	if g.isCyclic() == 1:
+		return False
+	else:
+		return True
+
+#################################### recoverable function
+
+def recoverable():
+	r_is_exist = False
+	r_tr_num   = False
+	is_commited = False
+	for i in range(len(allTrn)-2):
+		if "W" in allTrn[i]:	
+			for j in range(i+1, len(allTrn)):
+				if ("R" in allTrn[j]) and (allTrn[i][1:3] != allTrn[j][1:3]) and (allTrn[i][4] == allTrn[j][4]):
+					r_tr_num = allTrn[j][1:3]
+					for k in range(i+1, len(allTrn)):
+						if ("C" in allTrn[k]) and (allTrn[k][1:3] == allTrn[j][1:3]):
+							return False
+						elif ("C" in allTrn[k]) and (allTrn[k][1:3] == allTrn[i][1:3]):
+							is_commited = True
+							break
+					if is_commited == True:
+						break
+	return True
+
+#################################### casscadeless function
+
+def casscadeless():
+	r_is_exist = False
+	r_tr_num   = False
+	is_commited = False
+
+	commit_index = []
+	read_index   = []
+
+	for i in range(len(allTrn)-2):
+		if "W" in allTrn[i]:	
+			for j in range(i+1, len(allTrn)):
+				if ("C" in allTrn[j]): # and (allTrn[i][1:3] == allTrn[j][1:3]):
+					commit_index.append(j)
+				if ("R" in allTrn[j]) and (allTrn[j][1:3] != allTrn[i][1:3]) and (allTrn[i][4] == allTrn[j][4]):
+					read_index.append(j)
+					
+			if len(commit_index) and len(read_index):
+				if min(commit_index) > min(read_index):
+					return False
+
+	return True
+
+#################################### main get instructions line by line
+
+if __name__ == "__main__":
+	n = raw_input()
+	for i in range(int(n)):
+		a = raw_input()
+		allTrn.append(a)
+		if a[1:3] not in tr_count:
+			tr_count[a[1:3]] = counter
+			counter += 1
+	
+	if serializable() == True:
+		print "YES"
+	else:
+		print "NO"
+	
+	if recoverable() == True:
+		print "YES"
+	else:
+		print "NO"
+
+	if casscadeless() == True:
+		print "YES"
+	else:
+		print "NO"
+
+
+#################################### calling seri... recov... cassc... functions
+
 
