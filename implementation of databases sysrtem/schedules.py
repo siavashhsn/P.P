@@ -70,31 +70,24 @@ def serializable():
 #################################### recoverable function
 
 def recoverable():
-	r_is_exist = False
-	r_tr_num   = False
-	is_commited = False
 	for i in range(len(allTrn)-2):
 		if "W" in allTrn[i]:	
-			for j in range(i+1, len(allTrn)):
+			for j in range(i+1, len(allTrn)-1):
 				if ("R" in allTrn[j]) and (allTrn[i][1:3] != allTrn[j][1:3]) and (allTrn[i][4] == allTrn[j][4]):
-					r_tr_num = allTrn[j][1:3]
 					for k in range(i+1, len(allTrn)):
-						if ("C" in allTrn[k]) and (allTrn[k][1:3] == allTrn[j][1:3]):
-							return False
-						elif ("C" in allTrn[k]) and (allTrn[k][1:3] == allTrn[i][1:3]):
-							is_commited = True
-							break
-					if is_commited == True:
-						break
+						if 'C' in allTrn[k]:
+							if (allTrn[k][1:3] == allTrn[j][1:3]):
+								return False
+							elif (allTrn[k][1:3] == allTrn[i][1:3]):
+								break
+						elif 'A' in allTrn[k]:
+							if (allTrn[k][1:3] == allTrn[i][1:3]):
+								break
 	return True
 
 #################################### casscadeless function
 
 def casscadeless():
-	r_is_exist = False
-	r_tr_num   = False
-	is_commited = False
-
 	commit_index = []
 	read_index   = []
 
@@ -105,7 +98,7 @@ def casscadeless():
 					commit_index.append(j)
 				if ("R" in allTrn[j]) and (allTrn[j][1:3] != allTrn[i][1:3]) and (allTrn[i][4] == allTrn[j][4]):
 					read_index.append(j)
-					
+
 			if len(commit_index) and len(read_index):
 				if min(commit_index) > min(read_index):
 					return False
@@ -128,14 +121,15 @@ if __name__ == "__main__":
 	else:
 		print "NO"
 	
-	if recoverable() == True:
+	_casscadeless = casscadeless()
+	if _casscadeless == True:
+		print "YES"
 		print "YES"
 	else:
-		print "NO"
-
-	if casscadeless() == True:
-		print "YES"
-	else:
+		if recoverable() == True:
+			print "YES"
+		else:
+			print "NO"
 		print "NO"
 
 
