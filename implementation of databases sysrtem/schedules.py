@@ -70,6 +70,9 @@ def serializable():
 #################################### recoverable function
 
 def recoverable():
+	commit_index_W = []
+	commit_index_R = []
+	
 	for i in range(len(allTrn)-2):
 		if "W" in allTrn[i]:	
 			for j in range(i+1, len(allTrn)-1):
@@ -94,7 +97,7 @@ def casscadeless():
 	for i in range(len(allTrn)-2):
 		if "W" in allTrn[i]:	
 			for j in range(i+1, len(allTrn)):
-				if ("C" in allTrn[j]): # and (allTrn[i][1:3] == allTrn[j][1:3]):
+				if ("C" in allTrn[j]) and (allTrn[i][1:3] == allTrn[j][1:3]):
 					commit_index.append(j)
 				if ("R" in allTrn[j]) and (allTrn[j][1:3] != allTrn[i][1:3]) and (allTrn[i][4] == allTrn[j][4]):
 					read_index.append(j)
@@ -102,8 +105,13 @@ def casscadeless():
 			if len(commit_index) and len(read_index):
 				if min(commit_index) > min(read_index):
 					return False
+				else:
+					return True
+			elif len(commit_index) == 0:
+				return False
+			elif len(read_index) == 0:
+				return True
 
-	return True
 
 #################################### main get instructions line by line
 
